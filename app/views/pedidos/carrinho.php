@@ -11,9 +11,13 @@
     <?php
         require_once '../config/database.php';
         require_once '../app/helpers/functions.php';
+        require_once '../app/models/Cupom.php';
         global $conn;
         $carrinho = $_SESSION['carrinho'] ?? [];
         $subtotal = 0;
+        $frete = 0;
+        $desconto = 0;
+        $mensagem_cupom = '';
     ?>
     <?php if (!empty($carrinho)): ?>
         <form method="POST" action="index.php?rota=finalizar_pedido">
@@ -34,13 +38,9 @@
                             $produto_id = intval($partes[0]);
                             $variacao_id = isset($partes[1]) ? intval($partes[1]) : null;
                             $sql = "SELECT p.nome, p.preco";
-                            if ($variacao_id) {
-                                $sql .= ", v.nome AS variacao_nome";
-                            }
+                            if ($variacao_id) $sql .= ", v.nome AS variacao_nome";
                             $sql .= " FROM produtos p";
-                            if ($variacao_id) {
-                                $sql .= " LEFT JOIN variacoes v ON v.id = $variacao_id";
-                            }
+                            if ($variacao_id) $sql .= " LEFT JOIN variacoes v ON v.id = $variacao_id";
                             $sql .= " WHERE p.id = $produto_id";
                             $res = $conn->query($sql);
                             $produto = $res->fetch_assoc();
@@ -63,6 +63,28 @@
                     <?php endforeach ?>
                 </tbody>
             </table>
+            <?php
+                // Calcular frete
+                if ($subtotal > 200) {
+                    $frete = 0;
+                } elseif ($subtotal >= 52 && $subtotal <= 166.59) {
+                    $frete = 15;
+                } else {
+                    $frete = 20;
+                }
+                // Cupom automático (verifica se já foi preenchido)
+                $cupom_digitado = $_POST['cupom'] ?? '';
+                if (!empty($cupom_digitado)) {
+                    $dadosCupom = Cupom::validar($cupom_digitado, $subtotal);
+                    if ($dadosCupom) {
+                        $desconto = $dadosCupom['valor_desconto'];
+                        $mensagem_cupom = "Cupom aplicado com sucesso!";
+                    } else {
+                        $mensagem_cupom = "Cupom inválido ou não aplicável.";
+                    }
+                }
+                $total = $subtotal + $frete - $desconto;
+            ?>
             <div class="mb-3">
                 <label>CEP para entrega:</label>
                 <input type="text" name="cep" class="form-control" required>
@@ -73,10 +95,17 @@
             </div>
             <div class="mb-3">
                 <label>Cupom (opcional):</label>
-                <input type="text" name="cupom" class="form-control">
+                <input type="text" name="cupom" class="form-control" value="<?= htmlspecialchars($cupom_digitado) ?>">
             </div>
+            <?php if ($mensagem_cupom): ?>
+                <div class="alert alert-info"><?= htmlspecialchars($mensagem_cupom) ?></div>
+            <?php endif; ?>
             <p><strong>Subtotal:</strong> <?= formatarReais($subtotal) ?></p>
-            <p><small>* O frete será calculado ao finalizar</small></p>
+            <p><strong>Frete:</strong> <?= formatarReais($frete) ?></p>
+            <?php if ($desconto > 0): ?>
+                <p><strong>Desconto:</strong> -<?= formatarReais($desconto) ?></p>
+            <?php endif; ?>
+            <p><strong>Total:</strong> <?= formatarReais($total) ?></p>
             <button type="submit" class="btn btn-success mt-3">Finalizar Pedido</button>
             <a href="index.php?rota=limpar_carrinho" class="btn btn-outline-danger mt-3 ms-2">🧹 Esvaziar Carrinho</a>
         </form>
