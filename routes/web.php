@@ -34,6 +34,12 @@
         case 'cupom_salvar':
             (new CupomController())->salvar();
             break;
+        case 'estoque':
+            (new EstoqueController())->index();
+            break;
+        case 'estoque_atualizar':
+            (new EstoqueController())->atualizar();
+            break;
         default:
             http_response_code(404);
             echo "<h1>404 - Página não encontrada</h1>";
