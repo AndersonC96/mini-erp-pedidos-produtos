@@ -22,12 +22,14 @@
             $chave = $_GET['item'] ?? null;
             if ($chave && isset($_SESSION['carrinho'][$chave])) {
                 unset($_SESSION['carrinho'][$chave]);
+                $_SESSION['mensagem'] = 'Item removido com sucesso!';
             }
             header('Location: index.php?rota=carrinho');
             exit;
         }
         public function limpar() {
             unset($_SESSION['carrinho']);
+            $_SESSION['mensagem'] = 'Carrinho esvaziado com sucesso!';
             header('Location: index.php?rota=carrinho');
             exit;
         }
