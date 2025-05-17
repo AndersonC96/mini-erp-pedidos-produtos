@@ -1,4 +1,8 @@
 <?php require '../app/views/shared/header.php'; ?>
+<?php
+    require_once '../config/database.php';
+    global $conn;
+?>
 <div class="container mt-4">
     <h2>Carrinho</h2>
     <?php
@@ -18,12 +22,11 @@
                 </thead>
                 <tbody>
                     <?php
-                    require_once '../config/database.php';
-                    foreach ($carrinho as $produto_id => $qtd):
-                        $res = $conn->query("SELECT nome, preco FROM produtos WHERE id = $produto_id");
-                        $produto = $res->fetch_assoc();
-                        $total = $produto['preco'] * $qtd;
-                        $subtotal += $total;
+                        foreach ($carrinho as $produto_id => $qtd):
+                            $res = $conn->query("SELECT nome, preco FROM produtos WHERE id = $produto_id");
+                            $produto = $res->fetch_assoc();
+                            $total = $produto['preco'] * $qtd;
+                            $subtotal += $total;
                     ?>
                     <tr>
                         <td><?= htmlspecialchars($produto['nome']) ?></td>
