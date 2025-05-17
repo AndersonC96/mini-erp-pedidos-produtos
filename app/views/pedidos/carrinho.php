@@ -1,6 +1,13 @@
 <?php require '../app/views/shared/header.php'; ?>
 <div class="container mt-4">
     <h2>Carrinho</h2>
+    <?php if (!empty($_SESSION['mensagem'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= $_SESSION['mensagem'] ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+    <?php unset($_SESSION['mensagem']); ?>
+    <?php endif; ?>
     <?php
         require_once '../config/database.php';
         require_once '../app/helpers/functions.php';
