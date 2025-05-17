@@ -1,9 +1,7 @@
 <?php require '../app/views/shared/header.php'; ?>
-
 <div class="container mt-4">
     <h2>Lista de Produtos</h2>
     <a href="index.php?rota=produto_form" class="btn btn-primary mb-3">Novo Produto</a>
-
     <?php if (!empty($produtos)) : ?>
         <table class="table table-bordered">
             <thead>
@@ -34,5 +32,4 @@
         <p>Nenhum produto cadastrado.</p>
     <?php endif ?>
 </div>
-
 <?php require '../app/views/shared/footer.php'; ?>
