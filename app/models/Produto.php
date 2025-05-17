@@ -1,0 +1,29 @@
+<?php
+    require_once '../config/database.php';
+    class Produto {
+        public static function todos() {
+            global $conn;
+            $sql = "SELECT * FROM produtos";
+            return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
+        }
+        public static function salvar($dados) {
+            global $conn;
+            $nome = $conn->real_escape_string($dados['nome']);
+            $preco = floatval($dados['preco']);
+            $conn->query("INSERT INTO produtos (nome, preco) VALUES ('$nome', $preco)");
+            $produto_id = $conn->insert_id;
+            // Variações e Estoque
+            if (!empty($dados['variacoes'])) {
+                foreach ($dados['variacoes'] as $index => $variacao_nome) {
+                    $variacao_nome = $conn->real_escape_string($variacao_nome);
+                    $conn->query("INSERT INTO variacoes (produto_id, nome) VALUES ($produto_id, '$variacao_nome')");
+                    $variacao_id = $conn->insert_id;
+                    $estoque = intval($dados['estoques'][$index]);
+                    $conn->query("INSERT INTO estoques (produto_id, variacao_id, quantidade) VALUES ($produto_id, $variacao_id, $estoque)");
+                }
+            } else {
+                $estoque = intval($dados['estoque'] ?? 0);
+                $conn->query("INSERT INTO estoques (produto_id, variacao_id, quantidade) VALUES ($produto_id, NULL, $estoque)");
+            }
+        }
+    }
