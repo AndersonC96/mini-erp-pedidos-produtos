@@ -53,13 +53,19 @@
                         ?>
                         <tr>
                             <td><?= htmlspecialchars($nome_produto) ?></td>
-                            <td><?= $qtd ?></td>
+                            <td>
+                                <form method="POST" action="index.php?rota=atualizar_qtd" class="d-flex align-items-center">
+                                    <input type="hidden" name="item" value="<?= htmlspecialchars($chave) ?>">
+                                    <input type="number" name="quantidade" value="<?= $qtd ?>" min="1" class="form-control form-control-sm me-2" style="max-width: 80px;">
+                                    <button class="btn btn-sm btn-outline-secondary" title="Atualizar">🔄</button>
+                                </form>
+                            </td>
                             <td><?= formatarReais($produto['preco']) ?></td>
                             <td><?= formatarReais($total) ?></td>
                             <td>
                                 <a href="index.php?rota=remover_item&item=<?= urlencode($chave) ?>" class="btn btn-sm btn-danger" title="Remover item">🗑</a>
                             </td>
-                        </tr>
+<                       /tr>
                     <?php endforeach ?>
                 </tbody>
             </table>
