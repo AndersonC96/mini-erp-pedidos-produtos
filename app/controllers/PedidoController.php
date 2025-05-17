@@ -18,4 +18,12 @@
             unset($_SESSION['carrinho']);
             require '../app/views/pedidos/sucesso.php';
         }
+        public function remover() {
+            $chave = $_GET['item'] ?? null;
+            if ($chave && isset($_SESSION['carrinho'][$chave])) {
+                unset($_SESSION['carrinho'][$chave]);
+            }
+            header('Location: index.php?rota=carrinho');
+            exit;
+        }
     }
