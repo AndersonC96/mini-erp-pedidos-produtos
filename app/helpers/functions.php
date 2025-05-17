@@ -49,3 +49,24 @@
         header("Location: index.php?rota={$rota}");
         exit;
     }
+    /**
+    * Registra uma mensagem no log do sistema.
+    *
+    * @param string $mensagem
+    * @param string $arquivo
+    */
+    function registrarLog($mensagem, $arquivo = '../storage/logs/app.log') {
+        $linha = "[" . date('Y-m-d H:i:s') . "] " . $mensagem . PHP_EOL;
+        file_put_contents($arquivo, $linha, FILE_APPEND);
+    }
+    /**
+    * Simula o envio de e-mail e grava log.
+    *
+    * @param string $para
+    * @param string $assunto
+    * @param string $mensagem
+    */
+    function simularEnvioEmail($para, $assunto, $mensagem) {
+        $log = "Para: $para\nAssunto: $assunto\nMensagem:\n$mensagem\n----------------------\n";
+        file_put_contents('../storage/emails/mail.log', $log, FILE_APPEND);
+    }
