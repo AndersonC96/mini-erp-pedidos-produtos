@@ -95,7 +95,7 @@
             </div>
             <div class="mb-3">
                 <label>Cupom (opcional):</label>
-                <input type="text" name="cupom" class="form-control" value="<?= htmlspecialchars($cupom_digitado) ?>">
+                <input type="text" name="cupom" class="form-control" value="<?= htmlspecialchars($cupom_usado) ?>" onchange="this.form.submit()">
             </div>
             <?php if ($mensagem_cupom): ?>
                 <div class="alert alert-info"><?= htmlspecialchars($mensagem_cupom) ?></div>
