@@ -45,6 +45,9 @@
         case 'produto_atualizar':
             (new ProdutoController())->atualizar();
             break;
+        case 'limpar_carrinho':
+            (new PedidoController())->limpar();
+            break;
         default:
             http_response_code(404);
             echo "<h1>404 - Página não encontrada</h1>";
