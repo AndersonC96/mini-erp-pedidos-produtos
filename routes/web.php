@@ -39,6 +39,12 @@
         case 'estoque_atualizar':
             (new EstoqueController())->atualizar();
             break;
+        case 'produto_editar':
+            (new ProdutoController())->editar();
+            break;
+        case 'produto_atualizar':
+            (new ProdutoController())->atualizar();
+            break;
         default:
             http_response_code(404);
             echo "<h1>404 - Página não encontrada</h1>";
