@@ -1,10 +1,9 @@
 <?php
-    // Controllers
     require_once '../app/controllers/ProdutoController.php';
     require_once '../app/controllers/PedidoController.php';
     require_once '../app/controllers/CupomController.php';
     require_once '../app/controllers/WebhookController.php';
-    // Roteamento
+    require_once '../app/controllers/EstoqueController.php';
     $rota = $_GET['rota'] ?? 'produtos';
     switch ($rota) {
         case 'produtos':
