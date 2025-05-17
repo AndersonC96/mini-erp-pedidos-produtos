@@ -26,4 +26,9 @@
             header('Location: index.php?rota=carrinho');
             exit;
         }
+        public function limpar() {
+            unset($_SESSION['carrinho']);
+            header('Location: index.php?rota=carrinho');
+            exit;
+        }
     }
