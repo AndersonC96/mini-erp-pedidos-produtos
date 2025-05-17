@@ -27,4 +27,9 @@
                 $conn->query("INSERT INTO estoques (produto_id, variacao_id, quantidade) VALUES ($produto_id, NULL, $estoque)");
             }
         }
+        public static function todosComEstoque() {
+            global $conn;
+            $sql = "SELECT p.id AS produto_id, p.nome, v.id AS variacao_id, v.nome AS variacao, e.quantidade FROM produtos p LEFT JOIN variacoes v ON v.produto_id = p.id LEFT JOIN estoques e ON e.produto_id = p.id AND (e.variacao_id = v.id OR (v.id IS NULL AND e.variacao_id IS NULL)) ORDER BY p.nome, v.nome";
+            return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
+        }
     }
