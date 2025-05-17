@@ -17,9 +17,22 @@
                         <td><?= htmlspecialchars($produto['nome']) ?></td>
                         <td>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></td>
                         <td>
+                            <?php
+                                require_once '../config/database.php';
+                                global $conn;
+                                $resVar = $conn->query("SELECT id, nome FROM variacoes WHERE produto_id = " . $produto['id']);
+                                $variacoes = $resVar->fetch_all(MYSQLI_ASSOC);
+                            ?>
                             <form action="index.php?rota=adicionar_carrinho" method="POST" class="d-inline me-2">
                                 <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
-                                <input type="number" name="quantidade" value="1" min="1" class="form-control d-inline w-25 me-2" style="width: 70px; display: inline-block;">
+                                <?php if (!empty($variacoes)): ?>
+                                    <select name="variacao_id" class="form-select form-select-sm d-inline w-auto me-2">
+                                        <?php foreach ($variacoes as $v): ?>
+                                            <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['nome']) ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                <?php endif ?>
+                                <input type="number" name="quantidade" value="1" min="1" class="form-control d-inline w-25 me-2" style="width: 70px;">
                                 <button class="btn btn-sm btn-success">Comprar</button>
                             </form>
                             <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
