@@ -1,7 +1,7 @@
 <?php require '../app/views/shared/header.php'; ?>
 <div class="container mt-4">
     <h2>Cadastro de Produto</h2>
-    <form method="POST" action="index.php?rota=produto_salvar">
+    <form method="POST" action="index.php?rota=produto_salvar" enctype="multipart/form-data">
         <div class="form-group">
             <label>Nome:</label>
             <input type="text" name="nome" class="form-control" required>
@@ -17,14 +17,21 @@
                 <input type="number" name="estoques[]" class="form-control" placeholder="Estoque">
             </div>
         </div>
-
         <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarVariacao()">+ Adicionar Variação</button>
-
         <div class="form-group mt-3">
             <label>Estoque (caso não use variação):</label>
             <input type="number" name="estoque" class="form-control">
         </div>
-
+        <div class="form-group mt-3">
+            <label>Imagem do Produto:</label>
+            <div class="mb-2">
+                <input type="text" name="imagem_url" class="form-control" placeholder="URL da imagem (https://...)">
+            </div>
+            <div>
+                <input type="file" name="imagem_arquivo" accept="image/*" class="form-control">
+                <small class="form-text text-muted">Se você selecionar um arquivo, ele será usado no lugar do link acima.</small>
+            </div>
+        </div>
         <button type="submit" class="btn btn-success mt-4">Salvar Produto</button>
         <a href="index.php?rota=produtos" class="btn btn-secondary mt-4">Voltar</a>
     </form>
