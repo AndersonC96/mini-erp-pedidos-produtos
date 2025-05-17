@@ -31,6 +31,9 @@
         case 'cupons':
             (new CupomController())->form();
             break;
+        case 'cupom_salvar':
+            (new CupomController())->salvar();
+            break;
         default:
             http_response_code(404);
             echo "<h1>404 - Página não encontrada</h1>";
