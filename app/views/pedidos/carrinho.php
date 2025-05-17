@@ -17,11 +17,12 @@
                         <th>Qtd</th>
                         <th>Preço</th>
                         <th>Total</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                        foreach ($carrinho as $chave => $qtd):
+                    <?php foreach ($carrinho as $chave => $qtd): ?>
+                        <?php
                             $partes = explode(':', $chave);
                             $produto_id = intval($partes[0]);
                             $variacao_id = isset($partes[1]) ? intval($partes[1]) : null;
@@ -42,13 +43,16 @@
                             }
                             $total = $produto['preco'] * $qtd;
                             $subtotal += $total;
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($nome_produto) ?></td>
-                        <td><?= $qtd ?></td>
-                        <td><?= formatarReais($produto['preco']) ?></td>
-                        <td><?= formatarReais($total) ?></td>
-                    </tr>
+                        ?>
+                        <tr>
+                            <td><?= htmlspecialchars($nome_produto) ?></td>
+                            <td><?= $qtd ?></td>
+                            <td><?= formatarReais($produto['preco']) ?></td>
+                            <td><?= formatarReais($total) ?></td>
+                            <td>
+                                <a href="index.php?rota=remover_item&item=<?= urlencode($chave) ?>" class="btn btn-sm btn-danger" title="Remover item">🗑</a>
+                            </td>
+                        </tr>
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -67,6 +71,7 @@
             <p><strong>Subtotal:</strong> <?= formatarReais($subtotal) ?></p>
             <p><small>* O frete será calculado ao finalizar</small></p>
             <button type="submit" class="btn btn-success mt-3">Finalizar Pedido</button>
+            <a href="index.php?rota=limpar_carrinho" class="btn btn-outline-danger mt-3 ms-2">🧹 Esvaziar Carrinho</a>
         </form>
     <?php else: ?>
         <p>Seu carrinho está vazio.</p>
