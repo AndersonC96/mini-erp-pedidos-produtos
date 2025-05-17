@@ -9,8 +9,9 @@
         public static function salvar($dados) {
             global $conn;
             $nome = $conn->real_escape_string($dados['nome']);
+            $imagem = $conn->real_escape_string($dados['imagem_url'] ?? '');
             $preco = floatval($dados['preco']);
-            $conn->query("INSERT INTO produtos (nome, preco) VALUES ('$nome', $preco)");
+            $conn->query("INSERT INTO produtos (nome, imagem_url, preco) VALUES ('$nome', '$imagem', $preco)");
             $produto_id = $conn->insert_id;
             // Variações e Estoque
             if (!empty($dados['variacoes'])) {
