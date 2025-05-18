@@ -21,7 +21,6 @@
             $endereco = $_POST['endereco'];
             $cupom = $_POST['cupom'] ?? null;
             $pedido_id = Pedido::criar($_SESSION['carrinho'], $cep, $endereco, $cupom);
-            // Monta conteúdo do e-mail
             $mensagem = "Seu pedido #$pedido_id foi finalizado com sucesso!\n\n";
             $mensagem .= "Endereço de entrega: $endereco\n";
             $mensagem .= "CEP: $cep\n\n";
@@ -47,11 +46,9 @@
                 $subtotal += $total;
                 $mensagem .= "- $nome_produto | Quantidade: $qtd | Total: R$ " . number_format($total, 2, ',', '.') . "\n";
             }
-            // Frete
             if ($subtotal > 200) $frete = 0;
             elseif ($subtotal >= 52 && $subtotal <= 166.59) $frete = 15;
             else $frete = 20;
-            // Desconto
             $desconto = 0;
             if ($cupom) {
                 require_once '../app/models/Cupom.php';
@@ -94,13 +91,21 @@
         }
         public function lista() {
             require_once '../app/models/Pedido.php';
-            $pedidos = Pedido::todos();
+            $busca = $_GET['busca'] ?? '';
+            $status = $_GET['status'] ?? '';
+            $ordenar = $_GET['ordem'] ?? 'desc'; // corrigido: 'ordem' no formulário
+            $pagina = max(1, intval($_GET['pagina'] ?? 1));
+            $limite = 10;
+            $resultado = Pedido::todosFiltrado($busca, $status, $ordenar, $pagina, $limite); // <-- ORDEM CORRIGIDA
+            $pedidos = $resultado['dados'];
+            $total_paginas = $resultado['total_paginas'];
+            $pagina_atual = $pagina;
             require '../app/views/pedidos/lista.php';
         }
         public function alterarStatus() {
             require_once '../app/models/Pedido.php';
             $id = intval($_POST['pedido_id']);
-            $novo_status = $_POST['status'];   // <- Corrigido
+            $novo_status = $_POST['status'];
             Pedido::alterarStatus($id, $novo_status);
             $_SESSION['mensagem'] = "Status do pedido alterado!";
             header('Location: index.php?rota=pedidos');
