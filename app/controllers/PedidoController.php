@@ -98,12 +98,11 @@
             require '../app/views/pedidos/lista.php';
         }
         public function alterarStatus() {
-            require_once '../config/database.php';
-            global $conn;
-            $pedido_id = intval($_POST['pedido_id']);
-            $status = $conn->real_escape_string($_POST['status']);
-            $conn->query("UPDATE pedidos SET status = '$status' WHERE id = $pedido_id");
-            $_SESSION['mensagem'] = "Status do pedido #$pedido_id alterado com sucesso!";
+            require_once '../app/models/Pedido.php';
+            $id = intval($_POST['pedido_id']);
+            $novo_status = $_POST['status'];   // <- Corrigido
+            Pedido::alterarStatus($id, $novo_status);
+            $_SESSION['mensagem'] = "Status do pedido alterado!";
             header('Location: index.php?rota=pedidos');
             exit;
         }
