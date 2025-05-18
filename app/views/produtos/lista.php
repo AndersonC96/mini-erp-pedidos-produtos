@@ -15,9 +15,9 @@
             <tbody>
                 <?php foreach ($produtos as $produto): ?>
                     <tr>
-                        <td style="width: 80px;">
+                        <td>
                             <?php if (!empty($produto['imagem_url'])): ?>
-                                <img src="<?= htmlspecialchars($produto['imagem_url']) ?>" alt="Imagem" class="img-thumbnail" style="max-width: 70px;">
+                                <img src="<?= htmlspecialchars($produto['imagem_url']) ?>" alt="Imagem do produto" style="max-height: 80px; max-width: 80px;">
                             <?php else: ?>
                                 <span class="text-muted">Sem imagem</span>
                             <?php endif; ?>
@@ -43,8 +43,18 @@
                                 <input type="number" name="quantidade" value="1" min="1" class="form-control d-inline w-25 me-2" style="width: 70px;">
                                 <button class="btn btn-sm btn-success">Comprar</button>
                             </form>
-                            <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</a>
+                            <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-sm btn-warning me-1">Editar</a>
+                            <?php if (!empty($variacoes)): ?>
+                                <!-- botão para excluir variação específica -->
+                                <?php foreach ($variacoes as $v): ?>
+                                    <a href="index.php?rota=variacao_excluir&id=<?= $v['id'] ?>" class="btn btn-sm btn-outline-danger mb-1" onclick="return confirm('Deseja excluir a variação \"<?= htmlspecialchars($v['nome']) ?>\"?')">
+                                        ❌ <?= htmlspecialchars($v['nome']) ?>
+                                    </a>
+                                <?php endforeach ?>
+                            <?php else: ?>
+                            <!-- botão para excluir produto inteiro -->
+                            <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</a>
+                            <?php endif ?>
                         </td>
                     </tr>
                 <?php endforeach ?>
