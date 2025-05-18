@@ -54,6 +54,9 @@
         case 'validar_cupom':
             (new CupomController())->validar();
             break;
+        case 'produto_excluir':
+            (new ProdutoController())->excluir();
+            break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item = $_POST['item'];
