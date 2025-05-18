@@ -6,7 +6,7 @@
             $pagina = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
             $busca = $_GET['busca'] ?? '';
             $ordenar = $_GET['ordenar'] ?? 'nome_asc';
-            $limite = 8;
+            $limite = 9;
             $offset = ($pagina - 1) * $limite;
             // Obtém produtos com filtro, busca e ordenação
             $produtos = Produto::paginar($limite, $offset, $ordenar, $busca);
