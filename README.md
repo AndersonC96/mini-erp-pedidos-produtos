@@ -120,8 +120,10 @@ Senão, o status do pedido é atualizado
 - Cadastro de Produtos
 ![Cadastro de produtos](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/produtos.png)
 - Carrinho
-
+![Carrinho](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/carrinho.png)
 - Aplicação de cupom
-
+![Cupom](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/carrinho.png)
 - Pedidos e cupons
+    - ![Pedidos](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/pedidos.png)
+    - ![Cupom](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/cupom.png)
 
