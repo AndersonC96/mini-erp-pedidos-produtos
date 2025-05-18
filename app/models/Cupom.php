@@ -15,4 +15,10 @@
             $res = $conn->query("SELECT * FROM cupons WHERE codigo = '$codigo' AND validade >= CURDATE() AND minimo_subtotal <= $subtotal LIMIT 1");
             return $res->fetch_assoc();
         }
+        public static function todos() {
+            global $conn;
+            $sql = "SELECT * FROM cupons ORDER BY validade DESC";
+            $res = $conn->query($sql);
+            return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+        }
     }
