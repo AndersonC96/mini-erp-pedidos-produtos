@@ -22,4 +22,9 @@
             }
             exit;
         }
+        public function listar() {
+            require_once '../app/models/Cupom.php';
+            $cupons = Cupom::todos();
+            require '../app/views/cupons/lista.php';
+        }
     }
