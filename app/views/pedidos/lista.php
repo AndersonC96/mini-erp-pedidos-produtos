@@ -32,10 +32,13 @@
                             <form method="POST" action="index.php?rota=pedido_alterar_status" class="d-flex">
                                 <input type="hidden" name="pedido_id" value="<?= $p['id'] ?>">
                                 <select name="status" class="form-select form-select-sm me-2">
-                                    <option value="cancelado" <?= $p['status'] == 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
-                                    <option value="entregue" <?= $p['status'] == 'entregue' ? 'selected' : '' ?>>Entregue</option>
-                                    <option value="enviado" <?= $p['status'] == 'enviado' ? 'selected' : '' ?>>Enviado</option>
-                                    <option value="pendente" <?= $p['status'] == 'pendente' ? 'selected' : '' ?>>Pendente</option>
+                                    <?php
+                                        $opcoes = ['Pendente', 'Processando', 'Enviado', 'Concluído', 'Cancelado'];
+                                        foreach ($opcoes as $opcao):
+                                            $selecionado = strtolower($p['status']) === strtolower($opcao) ? 'selected' : '';
+                                    ?>
+                                        <option value="<?= $opcao ?>" <?= $selecionado ?>><?= $opcao ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                                 <button class="btn btn-sm btn-primary">Salvar</button>
                             </form>
