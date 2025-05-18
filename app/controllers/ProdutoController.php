@@ -2,15 +2,32 @@
     class ProdutoController {
         public function index() {
             require_once '../app/models/Produto.php';
-            $produtos = Produto::todos();
+
+            // Captura parâmetros GET
+            $pagina = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
+            $busca = $_GET['busca'] ?? '';
+            $ordenar = $_GET['ordenar'] ?? 'nome_asc';
+
+            $limite = 8;
+            $offset = ($pagina - 1) * $limite;
+
+            // Obtém produtos com filtro, busca e ordenação
+            $produtos = Produto::paginar($limite, $offset, $ordenar, $busca);
+            $total_registros = Produto::contarTodos($busca);
+            $total_paginas = ceil($total_registros / $limite);
+            $pagina_atual = $pagina;
+
             require '../app/views/produtos/lista.php';
         }
+
         public function form() {
             require '../app/views/produtos/form.php';
         }
+
         public function salvar() {
             require_once '../app/models/Produto.php';
             $dados = $_POST;
+
             $imagem_url = $_POST['imagem_url'] ?? '';
             if (!empty($_FILES['imagem_arquivo']['tmp_name'])) {
                 $nome_tmp = $_FILES['imagem_arquivo']['tmp_name'];
@@ -24,11 +41,13 @@
                     $imagem_url = $destino;
                 }
             }
+
             $dados['imagem_url'] = $imagem_url;
             Produto::salvar($dados);
             header('Location: index.php?rota=produtos');
             exit;
         }
+
         public function editar() {
             require_once '../config/database.php';
             global $conn;
@@ -46,9 +65,11 @@
             $estoque_simples = $res->fetch_assoc()['quantidade'] ?? '';
             require '../app/views/produtos/form.php';
         }
+
         public function atualizar() {
             require_once '../app/models/Produto.php';
             $dados = $_POST;
+
             $imagem_url = $_POST['imagem_url'] ?? '';
             if (!empty($_FILES['imagem_arquivo']['tmp_name'])) {
                 $nome_tmp = $_FILES['imagem_arquivo']['tmp_name'];
@@ -62,11 +83,13 @@
                     $imagem_url = $destino;
                 }
             }
+
             $dados['imagem_url'] = $imagem_url;
             Produto::atualizar($dados);
             header('Location: index.php?rota=produtos');
             exit;
         }
+
         public function excluir() {
             require_once '../app/models/Produto.php';
             $id = intval($_GET['id']);
@@ -75,6 +98,7 @@
             header('Location: index.php?rota=produtos');
             exit;
         }
+
         public function excluirVariacao() {
             require_once '../config/database.php';
             global $conn;
