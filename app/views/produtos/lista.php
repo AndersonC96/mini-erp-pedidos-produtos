@@ -9,7 +9,7 @@
         <div class="row g-3 align-items-end">
             <div class="col-md-5">
                 <label class="form-label">🔍 Buscar por nome</label>
-                <input type="text" name="busca" class="form-control" placeholder="Ex: Camiseta Personalizada" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+                <input type="text" name="busca" class="form-control" placeholder="Ex: Halo" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
             </div>
             <div class="col-md-4">
                 <label class="form-label">📊 Ordenar por</label>
