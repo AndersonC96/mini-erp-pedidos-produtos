@@ -63,6 +63,9 @@
         case 'pedidos':
             (new PedidoController())->lista();
             break;
+        case 'pedido_alterar_status':
+            (new PedidoController())->alterarStatus();
+            break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item = $_POST['item'];
