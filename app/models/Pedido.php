@@ -91,4 +91,9 @@
             $sql = "SELECT * FROM pedidos ORDER BY criado_em DESC";
             return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
         }
+        public static function alterarStatus($id, $novo_status) {
+            global $conn;
+            $novo_status = $conn->real_escape_string($novo_status);
+            $conn->query("UPDATE pedidos SET status='$novo_status' WHERE id=$id");
+        }
     }
