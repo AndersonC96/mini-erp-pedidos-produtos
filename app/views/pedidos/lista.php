@@ -33,7 +33,7 @@
                                 <input type="hidden" name="pedido_id" value="<?= $p['id'] ?>">
                                 <select name="status" class="form-select form-select-sm me-2">
                                     <?php
-                                        $opcoes = ['Pendente', 'Processando', 'Enviado', 'Concluído', 'Cancelado'];
+                                        $opcoes = ['Pendente', 'Finalizado', 'Cancelado'];
                                         foreach ($opcoes as $opcao):
                                             $selecionado = strtolower($p['status']) === strtolower($opcao) ? 'selected' : '';
                                     ?>
