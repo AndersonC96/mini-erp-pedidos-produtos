@@ -14,7 +14,66 @@
         }
         public function finalizar() {
             require_once '../app/models/Pedido.php';
-            $pedido = Pedido::criar($_SESSION['carrinho'], $_POST['cep'], $_POST['endereco'], $_POST['cupom'] ?? null);
+            require_once '../config/database.php';
+            global $conn;
+            $email = $_POST['email'] ?? null;
+            $cep = $_POST['cep'];
+            $endereco = $_POST['endereco'];
+            $cupom = $_POST['cupom'] ?? null;
+            $pedido_id = Pedido::criar($_SESSION['carrinho'], $cep, $endereco, $cupom);
+            // Monta conteúdo do e-mail
+            $mensagem = "Seu pedido #$pedido_id foi finalizado com sucesso!\n\n";
+            $mensagem .= "Endereço de entrega: $endereco\n";
+            $mensagem .= "CEP: $cep\n\n";
+            $mensagem .= "Itens do pedido:\n";
+            $subtotal = 0;
+            foreach ($_SESSION['carrinho'] as $chave => $qtd) {
+                $partes = explode(':', $chave);
+                $produto_id = intval($partes[0]);
+                $variacao_id = isset($partes[1]) ? intval($partes[1]) : null;
+                $sql = "SELECT p.nome, p.preco";
+                if ($variacao_id) $sql .= ", v.nome AS variacao_nome";
+                $sql .= " FROM produtos p";
+                if ($variacao_id) $sql .= " LEFT JOIN variacoes v ON v.id = $variacao_id";
+                $sql .= " WHERE p.id = $produto_id";
+                $res = $conn->query($sql);
+                $produto = $res->fetch_assoc();
+                $nome_produto = $produto['nome'];
+                if (!empty($produto['variacao_nome'])) {
+                    $nome_produto .= " - " . $produto['variacao_nome'];
+                }
+                $preco = $produto['preco'];
+                $total = $preco * $qtd;
+                $subtotal += $total;
+                $mensagem .= "- $nome_produto | Quantidade: $qtd | Total: R$ " . number_format($total, 2, ',', '.') . "\n";
+            }
+            // Frete
+            if ($subtotal > 200) $frete = 0;
+            elseif ($subtotal >= 52 && $subtotal <= 166.59) $frete = 15;
+            else $frete = 20;
+            // Desconto
+            $desconto = 0;
+            if ($cupom) {
+                require_once '../app/models/Cupom.php';
+                $cupom_validado = Cupom::validar($cupom, $subtotal);
+                if ($cupom_validado) {
+                    $desconto = $cupom_validado['valor_desconto'];
+                }
+            }
+            $total_geral = $subtotal + $frete - $desconto;
+            $mensagem .= "\nSubtotal: R$ " . number_format($subtotal, 2, ',', '.');
+            $mensagem .= "\nFrete: R$ " . number_format($frete, 2, ',', '.');
+            if ($desconto > 0) {
+                $mensagem .= "\nDesconto: -R$ " . number_format($desconto, 2, ',', '.');
+            }
+            $mensagem .= "\nTotal do pedido: R$ " . number_format($total_geral, 2, ',', '.');
+            $mensagem .= "\n\nObrigado por comprar conosco!";
+            if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $assunto = "Confirmação do Pedido #$pedido_id";
+                $headers = "From: pedidos@mini-erp.com.br\r\n";
+                $headers .= "Content-Type: text/plain; charset=UTF-8";
+                @mail($email, $assunto, $mensagem, $headers);
+            }
             unset($_SESSION['carrinho']);
             require '../app/views/pedidos/sucesso.php';
         }
@@ -32,5 +91,10 @@
             $_SESSION['mensagem'] = 'Carrinho esvaziado com sucesso!';
             header('Location: index.php?rota=carrinho');
             exit;
+        }
+        public function lista() {
+            require_once '../app/models/Pedido.php';
+            $pedidos = Pedido::todos();
+            require '../app/views/pedidos/lista.php';
         }
     }
