@@ -75,4 +75,14 @@
             header('Location: index.php?rota=produtos');
             exit;
         }
+        public function excluirVariacao() {
+            require_once '../config/database.php';
+            global $conn;
+            $id = intval($_GET['id']);
+            $conn->query("DELETE FROM estoques WHERE variacao_id = $id");
+            $conn->query("DELETE FROM variacoes WHERE id = $id");
+            $_SESSION['mensagem'] = "Variação excluída com sucesso!";
+            header('Location: index.php?rota=produtos');
+            exit;
+        }
     }
