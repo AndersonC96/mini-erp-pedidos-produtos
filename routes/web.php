@@ -60,6 +60,9 @@
         case 'webhook':
             (new WebhookController())->receber();
             break;
+        case 'pedidos':
+            (new PedidoController())->lista();
+            break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item = $_POST['item'];
