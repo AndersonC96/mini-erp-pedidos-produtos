@@ -70,4 +70,25 @@
             $status = $conn->real_escape_string($status);
             $conn->query("UPDATE pedidos SET status = '$status' WHERE id = $id");
         }
+        public static function enviarEmail($pedido_id, $email) {
+            global $conn;
+            $pedido = $conn->query("SELECT * FROM pedidos WHERE id = $pedido_id")->fetch_assoc();
+            // Itens do pedido vêm direto do campo "produtos_texto"
+            $produtosTexto = $pedido['produtos_texto'];
+            $assunto = "Confirmação do Pedido #$pedido_id";
+            $mensagem = "Olá!\n\nSeu pedido foi recebido com sucesso.\n\n";
+            $mensagem .= "🧾 Itens do Pedido:\n" . $produtosTexto . "\n\n";
+            $mensagem .= "💳 Total: R$ " . number_format($pedido['total'], 2, ',', '.') . "\n";
+            $mensagem .= "📍 Endereço: " . $pedido['endereco'] . "\n";
+            $mensagem .= "🚚 Frete: R$ " . number_format($pedido['frete'], 2, ',', '.') . "\n\n";
+            $mensagem .= "🙏 Obrigado por comprar conosco!";
+            $headers = "From: pedidos@mini-erp.com.br\r\n";
+            $headers .= "Reply-To: pedidos@mini-erp.com.br";
+            mail($email, $assunto, $mensagem, $headers);
+        }
+        public static function todos() {
+            global $conn;
+            $sql = "SELECT * FROM pedidos ORDER BY criado_em DESC";
+            return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
+        }
     }
