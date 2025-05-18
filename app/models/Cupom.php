@@ -23,7 +23,33 @@
         }
         public static function todos() {
             global $conn;
-            $sql = "SELECT * FROM cupons ORDER BY validade DESC";
+            $filtros = [];
+            $ordem_sql = "validade DESC";
+            if (!empty($_GET['busca'])) {
+                $busca = $conn->real_escape_string($_GET['busca']);
+                $filtros[] = "codigo LIKE '%$busca%'";
+            }
+            if (!empty($_GET['ordenar'])) {
+                switch ($_GET['ordenar']) {
+                    case 'valor_maior':
+                        $ordem_sql = "valor_desconto DESC";
+                        break;
+                    case 'valor_menor':
+                        $ordem_sql = "valor_desconto ASC";
+                        break;
+                    case 'validade_maior':
+                        $ordem_sql = "validade DESC";
+                        break;
+                    case 'validade_menor':
+                        $ordem_sql = "validade ASC";
+                        break;
+                }
+            }
+            $sql = "SELECT * FROM cupons";
+            if ($filtros) {
+                $sql .= " WHERE " . implode(" AND ", $filtros);
+            }
+            $sql .= " ORDER BY $ordem_sql";
             $res = $conn->query($sql);
             return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
         }
