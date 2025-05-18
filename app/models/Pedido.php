@@ -147,4 +147,9 @@
             $novo_status = $conn->real_escape_string($novo_status);
             $conn->query("UPDATE pedidos SET status='$novo_status' WHERE id=$id");
         }
+        public static function excluir($id) {
+            global $conn;
+            $id = intval($id);
+            $conn->query("DELETE FROM pedidos WHERE id = $id");
+        }
     }
