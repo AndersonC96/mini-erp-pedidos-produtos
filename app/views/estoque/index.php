@@ -3,22 +3,26 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h3 class="card-title text-primary mb-4">📦 Gerenciar Estoque</h3>
-            <form method="GET" class="row g-2 mb-3">
+            <form method="GET" class="card card-body shadow-sm mb-4">
                 <input type="hidden" name="rota" value="estoque">
-                <div class="col-md-4">
-                    <input type="text" name="busca" class="form-control shadow-sm" placeholder="Buscar por produto ou variação" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
-                </div>
-                <div class="col-md-3">
-                    <select name="ordem" class="form-select shadow-sm">
-                        <option value="">Ordenar por...</option>
-                        <option value="nome_asc" <?= ($_GET['ordem'] ?? '') === 'nome_asc' ? 'selected' : '' ?>>Nome (A-Z)</option>
-                        <option value="nome_desc" <?= ($_GET['ordem'] ?? '') === 'nome_desc' ? 'selected' : '' ?>>Nome (Z-A)</option>
-                        <option value="qtd_asc" <?= ($_GET['ordem'] ?? '') === 'qtd_asc' ? 'selected' : '' ?>>Estoque (menor)</option>
-                        <option value="qtd_desc" <?= ($_GET['ordem'] ?? '') === 'qtd_desc' ? 'selected' : '' ?>>Estoque (maior)</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100">🔍 Filtrar</button>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label">🔍 Buscar por produto ou variação</label>
+                        <input type="text" name="busca" class="form-control" placeholder="Ex: Xbox Series X" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">📊 Ordenar por</label>
+                        <select name="ordem" class="form-select">
+                            <option value="">Selecionar...</option>
+                            <option value="nome_asc" <?= ($_GET['ordem'] ?? '') === 'nome_asc' ? 'selected' : '' ?>>Nome (A-Z)</option>
+                            <option value="nome_desc" <?= ($_GET['ordem'] ?? '') === 'nome_desc' ? 'selected' : '' ?>>Nome (Z-A)</option>
+                            <option value="qtd_asc" <?= ($_GET['ordem'] ?? '') === 'qtd_asc' ? 'selected' : '' ?>>Estoque (menor)</option>
+                            <option value="qtd_desc" <?= ($_GET['ordem'] ?? '') === 'qtd_desc' ? 'selected' : '' ?>>Estoque (maior)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100">🔎 Filtrar</button>
+                    </div>
                 </div>
             </form>
             <div id="mensagem-status"></div>
@@ -39,7 +43,7 @@
                                 <td><?= $item['variacao'] ?? '<span class="text-muted">Sem variação</span>' ?></td>
                                 <td><span class="badge bg-secondary"><?= $item['quantidade'] ?></span></td>
                                 <td>
-                                    <form method="POST" action="index.php?rota=estoque_atualizar" onsubmit="return confirmarAtualizacao(this, '<?= htmlspecialchars($item['nome']) ?>', '<?= $item['variacao'] ?? 'Sem variação' ?>')" class="d-flex align-items-center">
+                                    <form method="POST" action="index.php?rota=estoque_atualizar"onsubmit="return confirmarAtualizacao(this, '<?= htmlspecialchars($item['nome']) ?>', '<?= $item['variacao'] ?? 'Sem variação' ?>')"class="d-flex align-items-center">
                                         <input type="hidden" name="produto_id" value="<?= $item['produto_id'] ?>">
                                         <input type="hidden" name="variacao_id" value="<?= $item['variacao_id'] ?? 0 ?>">
                                         <input type="number" name="quantidade" value="<?= $item['quantidade'] ?>" class="form-control form-control-sm me-2 shadow-sm rounded" style="width: 100px;">
