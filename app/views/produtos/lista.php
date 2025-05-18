@@ -3,9 +3,10 @@
     <h2>Lista de Produtos</h2>
     <a href="index.php?rota=produto_form" class="btn btn-primary mb-3">Novo Produto</a>
     <?php if (!empty($produtos)) : ?>
-        <table class="table table-bordered">
+        <table class="table table-bordered align-middle">
             <thead>
                 <tr>
+                    <th>Imagem</th>
                     <th>Nome</th>
                     <th>Preço</th>
                     <th>Ações</th>
@@ -14,6 +15,13 @@
             <tbody>
                 <?php foreach ($produtos as $produto): ?>
                     <tr>
+                        <td style="width: 80px;">
+                            <?php if (!empty($produto['imagem_url'])): ?>
+                                <img src="<?= htmlspecialchars($produto['imagem_url']) ?>" alt="Imagem" class="img-thumbnail" style="max-width: 70px;">
+                            <?php else: ?>
+                                <span class="text-muted">Sem imagem</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?= htmlspecialchars($produto['nome']) ?></td>
                         <td>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></td>
                         <td>
@@ -36,6 +44,7 @@
                                 <button class="btn btn-sm btn-success">Comprar</button>
                             </form>
                             <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</a>
                         </td>
                     </tr>
                 <?php endforeach ?>
