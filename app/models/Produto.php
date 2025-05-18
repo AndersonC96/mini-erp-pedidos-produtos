@@ -33,12 +33,9 @@
             $nome = $conn->real_escape_string($dados['nome']);
             $imagem = $conn->real_escape_string($dados['imagem_url'] ?? '');
             $preco = floatval($dados['preco']);
-            // Atualiza dados do produto
             $conn->query("UPDATE produtos SET nome = '$nome', imagem_url = '$imagem', preco = $preco WHERE id = $id");
-            // Remove variações e estoques antigos
             $conn->query("DELETE FROM estoques WHERE produto_id = $id");
             $conn->query("DELETE FROM variacoes WHERE produto_id = $id");
-            // Recria variações e estoque
             if (!empty($dados['variacoes'])) {
                 foreach ($dados['variacoes'] as $index => $variacao_nome) {
                     $variacao_nome = $conn->real_escape_string($variacao_nome);
@@ -56,5 +53,22 @@
             global $conn;
             $sql = "SELECT p.id AS produto_id, p.nome, v.id AS variacao_id, v.nome AS variacao, e.quantidade FROM produtos p LEFT JOIN variacoes v ON v.produto_id = p.id LEFT JOIN estoques e ON e.produto_id = p.id AND (e.variacao_id = v.id OR (v.id IS NULL AND e.variacao_id IS NULL)) ORDER BY p.nome, v.nome";
             return $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
+        }
+        public static function excluir($id) {
+            global $conn;
+            $id = intval($id);
+            // Buscar imagem
+            $res = $conn->query("SELECT imagem_url FROM produtos WHERE id = $id");
+            if ($res && $res->num_rows > 0) {
+                $imagem = $res->fetch_assoc()['imagem_url'];
+                if ($imagem && strpos($imagem, 'public/uploads/') === 0 && file_exists($imagem)) {
+                    unlink($imagem);
+                }
+            }
+        // Deleta estoques e variacoes relacionados
+            $conn->query("DELETE FROM estoques WHERE produto_id = $id");
+            $conn->query("DELETE FROM variacoes WHERE produto_id = $id");
+            // Deleta o produto
+            $conn->query("DELETE FROM produtos WHERE id = $id");
         }
     }
