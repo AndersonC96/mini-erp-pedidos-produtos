@@ -37,7 +37,6 @@
                             $partes = explode(':', $chave);
                             $produto_id = intval($partes[0]);
                             $variacao_id = isset($partes[1]) ? intval($partes[1]) : null;
-                            // Consultar estoque da variação ou produto
                             if ($variacao_id) {
                                 $estoque_res = $conn->query("SELECT quantidade FROM estoques WHERE produto_id = $produto_id AND variacao_id = $variacao_id");
                                 $estoque = $estoque_res->fetch_assoc()['quantidade'] ?? 0;
@@ -81,6 +80,10 @@
             <div class="mb-3">
                 <label>Endereço completo:</label>
                 <textarea name="endereco" class="form-control" id="campo-endereco" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label>E-mail para receber o pedido:</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label>Cupom (opcional):</label>
