@@ -6,7 +6,8 @@
         public function salvar() {
             require_once '../app/models/Cupom.php';
             Cupom::salvar($_POST);
-            header('Location: index.php?rota=cupons');
+            $_SESSION['mensagem'] = 'Cupom salvo com sucesso!';
+            header('Location: index.php?rota=cupons_listar');
             exit;
         }
         public function validar() {
@@ -16,9 +17,15 @@
             $subtotal = floatval($_POST['subtotal'] ?? 0);
             $cupomObj = Cupom::validar($cupom, $subtotal);
             if ($cupomObj) {
-                echo json_encode(['valido' => true, 'desconto' => floatval($cupomObj['valor_desconto'])]);
+                echo json_encode([
+                    'valido' => true,
+                    'desconto' => floatval($cupomObj['valor_desconto'])
+                ]);
             } else {
-                echo json_encode(['valido' => false, 'mensagem' => 'Cupom inválido, expirado ou subtotal abaixo do mínimo.']);
+                echo json_encode([
+                    'valido' => false,
+                    'mensagem' => 'Cupom inválido, expirado ou subtotal abaixo do mínimo.'
+                ]);
             }
             exit;
         }
