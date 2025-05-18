@@ -27,4 +27,21 @@
             $cupons = Cupom::todos();
             require '../app/views/cupons/lista.php';
         }
+        public function editar() {
+            require_once '../config/database.php';
+            global $conn;
+            $codigo = $conn->real_escape_string($_GET['codigo']);
+            $res = $conn->query("SELECT * FROM cupons WHERE codigo = '$codigo'");
+            $cupom = $res->fetch_assoc();
+            require '../app/views/cupons/form.php';
+        }
+        public function excluir() {
+            require_once '../config/database.php';
+            global $conn;
+            $codigo = $conn->real_escape_string($_GET['codigo']);
+            $conn->query("DELETE FROM cupons WHERE codigo = '$codigo'");
+            $_SESSION['mensagem'] = "Cupom excluído com sucesso!";
+            header('Location: index.php?rota=cupons_listar');
+            exit;
+        }
     }
