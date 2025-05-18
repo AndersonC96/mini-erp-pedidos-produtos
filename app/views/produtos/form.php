@@ -1,63 +1,62 @@
 <?php require '../app/views/shared/header.php'; ?>
 <div class="container mt-4">
-    <h2><?= isset($produto) ? 'Editar Produto' : 'Cadastro de Produto' ?></h2>
-    <form method="POST" action="index.php?rota=<?= isset($produto) ? 'produto_atualizar' : 'produto_salvar' ?>" enctype="multipart/form-data">
-        <?php if (isset($produto)): ?>
-            <input type="hidden" name="id" value="<?= $produto['id'] ?>">
-        <?php endif; ?>
-        <div class="form-group">
-            <label>Nome:</label>
-            <input type="text" name="nome" class="form-control" required value="<?= $produto['nome'] ?? '' ?>">
-        </div>
-        <div class="form-group mt-3">
-            <label>Preço:</label>
-            <input type="number" step="0.01" name="preco" class="form-control" required value="<?= $produto['preco'] ?? '' ?>">
-        </div>
-        <div id="variacoes-container" class="mt-3">
-            <label>Variações (opcional):</label>
-            <?php if (!empty($variacoes)): ?>
-                <?php foreach ($variacoes as $index => $v): ?>
-                    <div class="input-group mb-2">
-                        <input type="text" name="variacoes[]" class="form-control" value="<?= htmlspecialchars($v['nome']) ?>">
-                        <input type="number" name="estoques[]" class="form-control" value="<?= $estoques[$v['id']] ?? 0 ?>">
-                    </div>
-                <?php endforeach ?>
-            <?php else: ?>
-                <div class="input-group mb-2">
-                    <input type="text" name="variacoes[]" class="form-control" placeholder="Ex: Tamanho M">
-                    <input type="number" name="estoques[]" class="form-control" placeholder="Estoque">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body">
+            <h3 class="card-title mb-4 text-primary d-flex align-items-center">
+                🛒 Cadastro de Produto
+            </h3>
+            <form method="POST" action="index.php?rota=produto_salvar" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Nome:</label>
+                    <input type="text" name="nome" class="form-control shadow-sm" required>
                 </div>
-            <?php endif ?>
+                <div class="mb-3">
+                    <label class="form-label">Preço:</label>
+                    <input type="number" step="0.01" name="preco" class="form-control shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Variações (opcional):</label>
+                    <div class="row g-2 align-items-center mb-2">
+                        <div class="col-md-6">
+                            <input type="text" name="variacoes[]" class="form-control shadow-sm" placeholder="Ex: Tamanho M">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" name="estoques[]" class="form-control shadow-sm" placeholder="Estoque">
+                        </div>
+                    </div>
+                    <button type="button" id="addVariacao" class="btn btn-outline-primary btn-sm">➕ Adicionar Variação</button>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Estoque (caso não use variação):</label>
+                    <input type="number" name="estoque_unico" class="form-control shadow-sm">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Imagem do Produto:</label>
+                    <input type="url" name="imagem_url" class="form-control shadow-sm mb-2" placeholder="URL da imagem (https://...)">
+                    <input type="file" name="imagem_file" class="form-control shadow-sm">
+                    <small class="form-text text-muted">Se você selecionar um arquivo, ele será usado no lugar do link acima.</small>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-success">💾 Salvar Produto</button>
+                    <a href="index.php?rota=produtos" class="btn btn-secondary">↩️ Voltar</a>
+                </div>
+            </form>
         </div>
-        <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarVariacao()">+ Adicionar Variação</button>
-        <div class="form-group mt-3">
-            <label>Estoque (caso não use variação):</label>
-            <input type="number" name="estoque" class="form-control" value="<?= $estoque_simples ?? '' ?>">
-        </div>
-        <div class="form-group mt-3">
-            <label>Imagem do Produto:</label>
-            <div class="mb-2">
-                <input type="text" name="imagem_url" class="form-control" placeholder="URL da imagem (https://...)" value="<?= $produto['imagem_url'] ?? '' ?>">
-            </div>
-            <div>
-                <input type="file" name="imagem_arquivo" accept="image/*" class="form-control">
-                <small class="form-text text-muted">Se você selecionar um arquivo, ele será usado no lugar do link acima.</small>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-success mt-4"><?= isset($produto) ? 'Atualizar' : 'Salvar Produto' ?></button>
-        <a href="index.php?rota=produtos" class="btn btn-secondary mt-4">Voltar</a>
-    </form>
+    </div>
 </div>
 <script>
-    function adicionarVariacao() {
-        const container = document.getElementById('variacoes-container');
-        const grupo = document.createElement('div');
-        grupo.className = 'input-group mb-2';
-        grupo.innerHTML = `
-            <input type="text" name="variacoes[]" class="form-control" placeholder="Ex: Nova Variação">
-            <input type="number" name="estoques[]" class="form-control" placeholder="Estoque">
+    document.getElementById('addVariacao').addEventListener('click', function () {
+        const container = document.createElement('div');
+        container.classList.add('row', 'g-2', 'align-items-center', 'mb-2');
+        container.innerHTML = `
+            <div class="col-md-6">
+                <input type="text" name="variacoes[]" class="form-control shadow-sm" placeholder="Ex: Tamanho M">
+            </div>
+            <div class="col-md-6">
+                <input type="number" name="estoques[]" class="form-control shadow-sm" placeholder="Estoque">
+            </div>
         `;
-        container.appendChild(grupo);
-    }
+        this.before(container);
+    });
 </script>
 <?php require '../app/views/shared/footer.php'; ?>
