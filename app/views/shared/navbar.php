@@ -9,6 +9,7 @@
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=produtos">Produtos</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=estoque">Estoque</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=carrinho">Carrinho</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php?rota=pedidos">Pedidos</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?rota=cupons">Cupons</a></li>
             </ul>
         </div>
