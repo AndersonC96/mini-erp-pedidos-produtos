@@ -7,7 +7,13 @@
             $valor = floatval($dados['valor_desconto']);
             $minimo = floatval($dados['minimo_subtotal']);
             $validade = $conn->real_escape_string($dados['validade']);
-            $conn->query("INSERT INTO cupons (codigo, valor_desconto, minimo_subtotal, validade) VALUES ('$codigo', $valor, $minimo, '$validade')");
+            $res = $conn->query("SELECT * FROM cupons WHERE codigo = '$codigo'");
+            if ($res->num_rows > 0) {
+                $sql = "UPDATE cupons SET valor_desconto = $valor, minimo_subtotal = $minimo, validade = '$validade' WHERE codigo = '$codigo'";
+            } else {
+                $sql = "INSERT INTO cupons (codigo, valor_desconto, minimo_subtotal, validade) VALUES ('$codigo', $valor, $minimo, '$validade')";
+            }
+            $conn->query($sql);
         }
         public static function validar($codigo, $subtotal) {
             global $conn;
