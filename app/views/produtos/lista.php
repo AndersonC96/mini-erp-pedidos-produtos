@@ -4,24 +4,28 @@
         <h2 class="text-primary">Produtos</h2>
         <a href="index.php?rota=produto_form" class="btn btn-success">➕ Novo Produto</a>
     </div>
-    <form class="row g-2 mb-4" method="GET" action="index.php">
+    <form class="card card-body shadow-sm mb-4" method="GET" action="index.php">
         <input type="hidden" name="rota" value="produtos">
-        <div class="col-md-4">
-            <input type="text" name="busca" class="form-control" placeholder="Buscar por nome..." value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
-        </div>
-        <div class="col-md-3">
-            <select name="ordenar" class="form-select">
-                <option value="nome_asc" <?= ($_GET['ordenar'] ?? '') === 'nome_asc' ? 'selected' : '' ?>>Nome A-Z</option>
-                <option value="nome_desc" <?= ($_GET['ordenar'] ?? '') === 'nome_desc' ? 'selected' : '' ?>>Nome Z-A</option>
-                <option value="preco_asc" <?= ($_GET['ordenar'] ?? '') === 'preco_asc' ? 'selected' : '' ?>>Preço crescente</option>
-                <option value="preco_desc" <?= ($_GET['ordenar'] ?? '') === 'preco_desc' ? 'selected' : '' ?>>Preço decrescente</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100">Filtrar</button>
-        </div>
-        <div class="col-md-2">
-            <a href="index.php?rota=produtos" class="btn btn-outline-secondary w-100">Limpar</a>
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label">🔍 Buscar por nome</label>
+                <input type="text" name="busca" class="form-control" placeholder="Ex: Camiseta Personalizada" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">📊 Ordenar por</label>
+                <select name="ordenar" class="form-select">
+                    <option value="nome_asc" <?= ($_GET['ordenar'] ?? '') === 'nome_asc' ? 'selected' : '' ?>>Nome A-Z</option>
+                    <option value="nome_desc" <?= ($_GET['ordenar'] ?? '') === 'nome_desc' ? 'selected' : '' ?>>Nome Z-A</option>
+                    <option value="preco_asc" <?= ($_GET['ordenar'] ?? '') === 'preco_asc' ? 'selected' : '' ?>>Preço crescente</option>
+                    <option value="preco_desc" <?= ($_GET['ordenar'] ?? '') === 'preco_desc' ? 'selected' : '' ?>>Preço decrescente</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary">🔎 Filtrar</button>
+            </div>
+            <div class="col-md-1 d-grid">
+                <a href="index.php?rota=produtos" class="btn btn-outline-secondary">↺</a>
+            </div>
         </div>
     </form>
     <?php if (!empty($produtos)) : ?>
@@ -74,7 +78,7 @@
                                         </div>
                                     </form>
                                 <?php else: ?>
-                                    <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-danger btn-sm"onclick="return confirm('Tem certeza que deseja excluir este produto?')">🗑️ Excluir</a>
+                                    <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este produto?')">🗑️ Excluir</a>
                                 <?php endif ?>
                             </div>
                         </div>
