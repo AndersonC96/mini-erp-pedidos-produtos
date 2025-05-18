@@ -15,6 +15,18 @@
         case 'produto_salvar':
             (new ProdutoController())->salvar();
             break;
+        case 'produto_editar':
+            (new ProdutoController())->editar();
+            break;
+        case 'produto_atualizar':
+            (new ProdutoController())->atualizar();
+            break;
+        case 'produto_excluir':
+            (new ProdutoController())->excluir();
+            break;
+        case 'variacao_excluir':
+            (new ProdutoController())->excluirVariacao();
+            break;
         case 'carrinho':
             (new PedidoController())->carrinho();
             break;
@@ -24,8 +36,14 @@
         case 'finalizar_pedido':
             (new PedidoController())->finalizar();
             break;
-        case 'webhook':
-            (new WebhookController())->receber();
+        case 'limpar_carrinho':
+            (new PedidoController())->limpar();
+            break;
+        case 'remover_item':
+            (new PedidoController())->remover();
+            break;
+        case 'validar_cupom':
+            (new CupomController())->validar();
             break;
         case 'cupons':
             (new CupomController())->form();
@@ -39,23 +57,8 @@
         case 'estoque_atualizar':
             (new EstoqueController())->atualizar();
             break;
-        case 'produto_editar':
-            (new ProdutoController())->editar();
-            break;
-        case 'produto_atualizar':
-            (new ProdutoController())->atualizar();
-            break;
-        case 'limpar_carrinho':
-            (new PedidoController())->limpar();
-            break;
-        case 'remover_item':
-            (new PedidoController())->remover();
-            break;
-        case 'validar_cupom':
-            (new CupomController())->validar();
-            break;
-        case 'produto_excluir':
-            (new ProdutoController())->excluir();
+        case 'webhook':
+            (new WebhookController())->receber();
             break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
