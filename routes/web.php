@@ -51,6 +51,9 @@
         case 'remover_item':
             (new PedidoController())->remover();
             break;
+        case 'validar_cupom':
+            (new CupomController())->validar();
+            break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item = $_POST['item'];
