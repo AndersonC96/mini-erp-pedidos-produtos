@@ -118,7 +118,7 @@ Senão, o status do pedido é atualizado
 ## 📸 Demonstração
 
 - Cadastro de Produtos
-![Logo do Projeto](public/public/uploads/logo.png)
+![Cadastro de produtos](https://raw.githubusercontent.com/AndersonC96/mini-erp-pedidos-produtos/main/public/public/uploads/produtos.png)
 - Carrinho
 
 - Aplicação de cupom
