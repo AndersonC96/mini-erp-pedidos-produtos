@@ -1,7 +1,10 @@
 <?php require '../app/views/shared/header.php'; ?>
 <div class="container mt-4">
-    <h2>Lista de Produtos</h2>
-    <form class="row mb-3" method="GET" action="index.php">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">Produtos</h2>
+        <a href="index.php?rota=produto_form" class="btn btn-success">➕ Novo Produto</a>
+    </div>
+    <form class="row g-2 mb-4" method="GET" action="index.php">
         <input type="hidden" name="rota" value="produtos">
         <div class="col-md-4">
             <input type="text" name="busca" class="form-control" placeholder="Buscar por nome..." value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
@@ -20,82 +23,88 @@
         <div class="col-md-2">
             <a href="index.php?rota=produtos" class="btn btn-outline-secondary w-100">Limpar</a>
         </div>
-        <div class="col-md-1">
-            <a href="index.php?rota=produto_form" class="btn btn-success w-100">Novo</a>
-        </div>
     </form>
     <?php if (!empty($produtos)) : ?>
-        <table class="table table-bordered align-middle">
-            <thead>
-                <tr>
-                    <th>Imagem</th>
-                    <th>Nome</th>
-                    <th>Preço</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($produtos as $produto): ?>
-                    <tr>
-                        <td>
-                            <?php if (!empty($produto['imagem_url'])): ?>
-                                <img src="<?= htmlspecialchars($produto['imagem_url']) ?>" alt="Imagem do produto" style="max-height: 80px; max-width: 80px;">
-                            <?php else: ?>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <?php foreach ($produtos as $produto): ?>
+                <?php
+                    require_once '../config/database.php';
+                    global $conn;
+                    $resVar = $conn->query("SELECT id, nome FROM variacoes WHERE produto_id = " . $produto['id']);
+                    $variacoes = $resVar->fetch_all(MYSQLI_ASSOC);
+                ?>
+                <div class="col">
+                    <div class="card shadow-sm border-0 h-100">
+                        <?php if (!empty($produto['imagem_url'])): ?>
+                            <img src="<?= htmlspecialchars($produto['imagem_url']) ?>" class="card-img-top" alt="Imagem do produto" style="object-fit: cover; height: 180px;">
+                        <?php else: ?>
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
                                 <span class="text-muted">Sem imagem</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?= htmlspecialchars($produto['nome']) ?></td>
-                        <td>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></td>
-                        <td>
-                            <?php
-                                require_once '../config/database.php';
-                                global $conn;
-                                $resVar = $conn->query("SELECT id, nome FROM variacoes WHERE produto_id = " . $produto['id']);
-                                $variacoes = $resVar->fetch_all(MYSQLI_ASSOC);
-                            ?>
-                            <form action="index.php?rota=adicionar_carrinho" method="POST" class="d-inline me-2">
+                            </div>
+                        <?php endif; ?>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary"><?= htmlspecialchars($produto['nome']) ?></h5>
+                            <p class="card-text fw-semibold mb-2">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                            <form action="index.php?rota=adicionar_carrinho" method="POST" class="mb-2">
                                 <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
                                 <?php if (!empty($variacoes)): ?>
-                                    <select name="variacao_id" class="form-select form-select-sm d-inline w-auto me-2">
+                                    <select name="variacao_id" class="form-select form-select-sm mb-2">
                                         <?php foreach ($variacoes as $v): ?>
                                             <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['nome']) ?></option>
                                         <?php endforeach ?>
                                     </select>
                                 <?php endif ?>
-                                <input type="number" name="quantidade" value="1" min="1" class="form-control d-inline w-25 me-2" style="width: 70px;">
-                                <button class="btn btn-sm btn-success">Comprar</button>
+                                <div class="input-group input-group-sm mb-2">
+                                    <input type="number" name="quantidade" value="1" min="1" class="form-control" style="max-width: 70px;">
+                                    <button class="btn btn-success" type="submit">Comprar</button>
+                                </div>
                             </form>
-                            <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-sm btn-warning me-1">Editar</a>
-                            <?php if (!empty($variacoes)): ?>
-                                <?php foreach ($variacoes as $v): ?>
-                                    <a href="index.php?rota=variacao_excluir&id=<?= $v['id'] ?>" class="btn btn-sm btn-outline-danger mb-1" onclick="return confirm('Deseja excluir a variação \"<?= htmlspecialchars($v['nome']) ?>\"?')">
-                                        ❌ <?= htmlspecialchars($v['nome']) ?>
-                                    </a>
-                                <?php endforeach ?>
-                            <?php else: ?>
-                                <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</a>
-                            <?php endif ?>
-                        </td>
-                    </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
-        <!-- Paginação -->
+                            <div class="d-flex flex-wrap gap-2 mt-auto">
+                                <a href="index.php?rota=produto_editar&id=<?= $produto['id'] ?>" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <?php if (!empty($variacoes)): ?>
+                                    <form method="GET" action="index.php" onsubmit="return confirm('Deseja mesmo excluir esta variação?')">
+                                        <input type="hidden" name="rota" value="variacao_excluir">
+                                        <div class="input-group input-group-sm">
+                                            <select name="id" class="form-select">
+                                                <?php foreach ($variacoes as $v): ?>
+                                                    <option value="<?= $v['id'] ?>"><?= htmlspecialchars($v['nome']) ?></option>
+                                                <?php endforeach ?>
+                                            </select>
+                                            <button class="btn btn-outline-danger">Excluir</button>
+                                        </div>
+                                    </form>
+                                <?php else: ?>
+                                    <a href="index.php?rota=produto_excluir&id=<?= $produto['id'] ?>" class="btn btn-danger btn-sm"onclick="return confirm('Tem certeza que deseja excluir este produto?')">🗑️ Excluir</a>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
         <?php if (isset($total_paginas) && $total_paginas > 1): ?>
-            <nav>
-                <ul class="pagination">
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <?php if ($pagina_atual > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?rota=produtos&pagina=<?= $pagina_atual - 1 ?>&ordenar=<?= urlencode($_GET['ordenar'] ?? '') ?>&busca=<?= urlencode($_GET['busca'] ?? '') ?>">Anterior</a>
+                        </li>
+                    <?php endif ?>
                     <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
                         <li class="page-item <?= ($i == $pagina_atual) ? 'active' : '' ?>">
-                            <a class="page-link" href="?rota=produtos&pagina=<?= $i ?>&ordenar=<?= urlencode($_GET['ordenar'] ?? '') ?>&busca=<?= urlencode($_GET['busca'] ?? '') ?>">
-                                <?= $i ?>
-                            </a>
+                            <a class="page-link" href="?rota=produtos&pagina=<?= $i ?>&ordenar=<?= urlencode($_GET['ordenar'] ?? '') ?>&busca=<?= urlencode($_GET['busca'] ?? '') ?>"><?= $i ?></a>
                         </li>
                     <?php endfor ?>
+                    <?php if ($pagina_atual < $total_paginas): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?rota=produtos&pagina=<?= $pagina_atual + 1 ?>&ordenar=<?= urlencode($_GET['ordenar'] ?? '') ?>&busca=<?= urlencode($_GET['busca'] ?? '') ?>">Próxima</a>
+                        </li>
+                    <?php endif ?>
                 </ul>
             </nav>
-        <?php endif ?>
+        <?php endif; ?>
     <?php else: ?>
-        <p>Nenhum produto cadastrado.</p>
-    <?php endif ?>
+        <p class="text-muted">Nenhum produto cadastrado.</p>
+    <?php endif; ?>
 </div>
 <?php require '../app/views/shared/footer.php'; ?>
