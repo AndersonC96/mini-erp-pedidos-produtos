@@ -69,6 +69,12 @@
         case 'cupons_listar':
             (new CupomController())->listar();
             break;
+        case 'cupom_editar':
+            (new CupomController())->editar();
+            break;
+        case 'cupom_excluir':
+            (new CupomController())->excluir();
+            break;
         case 'atualizar_qtd':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item = $_POST['item'];
