@@ -33,8 +33,8 @@ Sistema simples desenvolvido em PHP puro com padrão MVC para gerenciamento de p
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/mini-erp.git
-cd mini-erp
+git clone https://github.com/AndersonC96/mini-erp-pedidos-produtos.git
+cd mini-erp-pedidos-produtos
 ```
 
 2. **Configure o banco de dados MySQL:**
