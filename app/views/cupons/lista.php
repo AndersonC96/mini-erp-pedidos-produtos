@@ -1,6 +1,9 @@
 <?php require '../app/views/shared/header.php'; ?>
 <div class="container mt-4">
-    <h2 class="text-primary mb-3">🎟️ Cupons Cadastrados</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary mb-0">🎟️ Cupons Cadastrados</h2>
+        <a href="index.php?rota=cupons" class="btn btn-success">➕ Novo Cupom</a>
+    </div>
     <form method="GET" class="card card-body shadow-sm mb-4">
         <input type="hidden" name="rota" value="cupons_listar">
         <div class="row g-3 align-items-end">
@@ -52,7 +55,7 @@
                                 <a href="index.php?rota=cupom_editar&codigo=<?= urlencode($c['codigo']) ?>" class="btn btn-sm btn-warning me-1">
                                     ✏️ Editar
                                 </a>
-                                <a href="index.php?rota=cupom_excluir&codigo=<?= urlencode($c['codigo']) ?>" class="btn btn-sm btn-outline-danger"onclick="return confirm('Tem certeza que deseja excluir este cupom?')">
+                                <a href="index.php?rota=cupom_excluir&codigo=<?= urlencode($c['codigo']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir este cupom?')">
                                     🗑️ Excluir
                                 </a>
                             </td>
